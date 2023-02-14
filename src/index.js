@@ -1,19 +1,44 @@
-import React from "react";
+"use strict";
 
-const DefaultOnlyOneTabComponent = () => (
-  <div>Sorry! You can only have this application opened in one tab</div>
-);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.withOneTabEnforcer = withOneTabEnforcer;
 
-// eslint-disable-next-line import/prefer-default-export
-export function withOneTabEnforcer({
-  OnlyOneTabComponent = DefaultOnlyOneTabComponent,
-  localStorageTimeout = 15 * 1000, // 15,000 milliseconds = 15 seconds.
-  localStorageResetInterval = 10 * 1000, // 10,000 milliseconds = 10 seconds.
-  appName = "default-app-name" // has to be unique!
-} = {}) {
-  return WrappedComponent => {
+var _react = _interopRequireDefault(require("react"));
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+
+var DefaultOnlyOneTabComponent = function DefaultOnlyOneTabComponent() {
+  return _react.default.createElement(
+    "div",
+    null,
+    "Sorry! You can only have this application opened in one tab"
+  );
+}; // eslint-disable-next-line import/prefer-default-export
+
+function withOneTabEnforcer() {
+  var _ref =
+      arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+    _ref$OnlyOneTabCompon = _ref.OnlyOneTabComponent,
+    OnlyOneTabComponent =
+      _ref$OnlyOneTabCompon === void 0
+        ? DefaultOnlyOneTabComponent
+        : _ref$OnlyOneTabCompon,
+    _ref$localStorageTime = _ref.localStorageTimeout,
+    localStorageTimeout =
+      _ref$localStorageTime === void 0 ? 15 * 1000 : _ref$localStorageTime,
+    _ref$localStorageRese = _ref.localStorageResetInterval,
+    localStorageResetInterval =
+      _ref$localStorageRese === void 0 ? 10 * 1000 : _ref$localStorageRese,
+    _ref$appName = _ref.appName,
+    appName = _ref$appName === void 0 ? "default-app-name" : _ref$appName;
+
+  return function(WrappedComponent) {
     // ...and returns another component...
-    return props => {
+    return function(props) {
       if (
         isDuplicatedWindow(
           localStorageTimeout,
@@ -21,15 +46,15 @@ export function withOneTabEnforcer({
           appName
         )
       ) {
-        return <OnlyOneTabComponent />;
+        return _react.default.createElement(OnlyOneTabComponent, null);
       } else {
-        return <WrappedComponent {...props} />;
+        return _react.default.createElement(WrappedComponent, props);
       }
     };
   };
 }
 
-const isDuplicatedWindow = function(
+var isDuplicatedWindow = function isDuplicatedWindow(
   localStorageTimeout,
   localStorageResetInterval,
   localStorageTabKey
@@ -41,36 +66,47 @@ const isDuplicatedWindow = function(
 
   function setCookie(name, value, days) {
     var expires = "";
+
     if (days) {
       var date = new Date();
       date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
       expires = "; expires=" + date.toUTCString();
     }
+
     document.cookie = name + "=" + (value || "") + expires + "; path=/";
   }
 
   function getCookie(name) {
     var nameEQ = name + "=";
     var ca = document.cookie.split(";");
+
     for (var i = 0; i < ca.length; i++) {
       var c = ca[i];
-      while (c.charAt(0) == " ") c = c.substring(1, c.length);
+
+      while (c.charAt(0) == " ") {
+        c = c.substring(1, c.length);
+      }
+
       if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
     }
+
     return null;
   }
 
   function GetItem(itemtype) {
     var val = "";
+
     switch (itemtype) {
       case ItemType.Session:
         val = window.name;
         break;
+
       case ItemType.Local:
         val = decodeURIComponent(getCookie(localStorageTabKey));
         if (val == undefined) val = "";
         break;
     }
+
     return val;
   }
 
@@ -79,6 +115,7 @@ const isDuplicatedWindow = function(
       case ItemType.Session:
         window.name = val;
         break;
+
       case ItemType.Local:
         setCookie(localStorageTabKey, val);
         break;
@@ -86,11 +123,12 @@ const isDuplicatedWindow = function(
   }
 
   function createGUID() {
-    const s4 = function() {
+    var s4 = function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
         .toString(16)
         .substring(1);
     };
+
     return (
       s4() +
       s4() +
@@ -106,7 +144,6 @@ const isDuplicatedWindow = function(
       s4()
     );
   }
-
   /**
    * Compare our tab identifier associated with this session (particular tab)
    * with that of one that is in window name Storage (the active one for this browser).
@@ -120,21 +157,20 @@ const isDuplicatedWindow = function(
    *
    * Another thing, that should be done (so you can open a tab within 15 seconds of closing it) would be to do the following (or hook onto an existing onunload method):
    */
+
   function isTabDuplicated() {
     //console.log("In testTab");
     var sessionGuid = GetItem(ItemType.Session) || createGUID();
     SetItem(ItemType.Session, sessionGuid);
-
     var val = GetItem(ItemType.Local);
-    var tabObj = (val == "" ? null : JSON.parse(val)) || null;
+    var tabObj = (val == "" ? null : JSON.parse(val)) || null; // If no or stale tab object, our session is the winner.  If the guid matches, ours is still the winner
 
-    // If no or stale tab object, our session is the winner.  If the guid matches, ours is still the winner
     if (
       tabObj === null ||
       tabObj.timestamp < new Date().getTime() - localStorageTimeout ||
       tabObj.guid === sessionGuid
     ) {
-      const setTabObj = () => {
+      var setTabObj = function setTabObj() {
         //console.log("In setTabObj");
         var newTabObj = {
           guid: sessionGuid,
@@ -145,15 +181,18 @@ const isDuplicatedWindow = function(
 
       setTabObj();
       setInterval(setTabObj, localStorageResetInterval); //every x interval refresh timestamp in cookie
-      window.onunload = () => {
+
+      window.onunload = function() {
         SetItem(ItemType.Local, "");
         localStorage.removeItem(localStorageTabKey);
       };
+
       return false;
     } else {
       // An active tab is already open that does not match our session guid.
       return true;
     }
   }
+
   return isTabDuplicated();
 };
