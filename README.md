@@ -1,8 +1,6 @@
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-[![CircleCI](https://circleci.com/gh/TheBrainFamily/react-one-tab-enforcer.svg?style=shield)](https://circleci.com/gh/TheBrainFamily/react-one-tab-enforcer)
+# Welcome to **[@nyaxk/react-one-tab-enforcer](https://github.com/nyaxk/react-one-tab-enforcer)**!
 
-# Welcome to **[react-one-tab-enforcer](https://github.com/TheBrainFamily/react-one-tab-enforcer)**!
-
+## This package can used with Typescript and Javascript
 
 ## Why
 Sometimes your application should make it difficult for users to open your app in multiple tabs. With two tabs you could get your app in one state in one tab, which would not be reflected in the other one. Then making some actions in the first one could result in corrupted state on a backend. Obviously, you should prevent any data corruption in your backend, but if your application requires this extra safety-check, go ahead and use it. :-)
@@ -19,7 +17,7 @@ If your app is opened in a different tab within those 15 seconds, it will displa
 
 ### Install
 ``` 
-npm install --save  react-one-tab-enforcer
+npm install --save @nyaxk/react-one-tab-enforcer
 ```
 
 ### Wrap your main component
@@ -31,7 +29,7 @@ export default App
 
 to
 ```javascript
-import { withOneTabEnforcer } from "react-one-tab-enforcer"
+import { withOneTabEnforcer } from "@nyaxk/react-one-tab-enforcer"
 (..)
 export default withOneTabEnforcer()(App)
 ```
@@ -69,6 +67,4 @@ export default withOneTabEnforcer({appName: "my-unique-app-name", OnlyOneTabComp
 ## Credit
 This package is closely based on a code from this [jsfiddle](https://jsfiddle.net/yex8k2ts/30/) by [timkellypa](https://stackoverflow.com/users/1257546/timkellypa) .
  and [this jquery demo](https://www.jqueryscript.net/demo/Prevent-Webpage-Opened-Multiple-Tabs-duplicateWindow/). It was packaged for seemless react usage with a bit of a tweaking and made configurable. Unfortunatelly, the code from timkellypa didn't work correctly with chrome "duplicate" functionality.
-
-## Todo
-Tests.. This was needed "for yesterday", so I took a few shortcuts (including reusing a smart code from timkellypa and the demo above!) and verified manually! Sorry folks. I do have an idea how to test this, and if time allows, I will. Otherwise, I'm happy to take PRs! :-) CircleCI is all setup for a test-driven workflow. 
+Credits to https://www.npmjs.com/package/react-one-tab-enforcer

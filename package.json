@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TheBrainFamily/react-one-tab-enforcer.git"
+    "url": "git+https://github.com/nyaxk/react-one-tab-enforcer/"
   },
   "keywords": [
     "react",
@@ -26,9 +26,9 @@
   "author": "Łukasz Gandecki",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/TheBrainFamily/react-one-tab-enforcer/issues"
+    "url": "https://github.com/nyaxk/react-one-tab-enforcer/pulls"
   },
-  "homepage": "https://github.com/TheBrainFamily/react-one-tab-enforcer#readme",
+  "homepage": "https://github.com/nyaxk/react-one-tab-enforcer#readme",
   "devDependencies": {
     "@babel/cli": "^7.1.0",
     "@babel/core": "^7.1.0",
